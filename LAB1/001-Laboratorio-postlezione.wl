@@ -7,9 +7,9 @@ ShiftEncrypt[messaggio_, key_] := Mod[messaggio + key, 26];
 ShiftDecrypt[messaggio_, key_] := ShiftEncrypt[messaggio, -key];
 
 MessageEncode[ENC_, messaggio_, key_] := If[StringQ[messaggio],
-    FromCode[ENC[TextCode[messaggio], key]],
-    ENC[messaggio, key]
-    ;
+        FromCode[ENC[TextCode[messaggio], key]],
+        ENC[messaggio, key]
+    ] ;
 
 Frequencies[messaggio_]:=  Map[Count[messaggio, #] &, Range[0, 25]];
 
