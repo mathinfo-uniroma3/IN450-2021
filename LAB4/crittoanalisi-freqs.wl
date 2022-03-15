@@ -18,6 +18,11 @@ CoincidenceIndex[testo_] :=
     )]
   ];
 
+RELOAD=True;
+If[RELOAD,
+    Get["stato.mx"]
+    ,
+(
 testo = "001 FIOPPQNTPN BUUGGMOCYY JFMDVUUDEY ICLDYVITVL IJMMAAPYGF
             051 MOEHFKFMTV ZEIFMETVBV KDDNPFVKOI YHJZIVNRUI \
 DCZMBKYAZX
@@ -39,16 +44,13 @@ italian = Import["http://www.corriere.it"];
 english = Import["http://www.nytimes.com"];
 random = RandomInteger[{0, 25}, 3000];
 
+DumpSave["stato.mx",{ciphertext,message,italian,english,random}];
+)];
+nfull=Min[Map[Length,{ciphertext,TextCode@message,TextCode@italian,TextCode@english,random}]];
 TableForm@(tab = Table[
-    Map[CoincidenceIndex[Take[#, len]] &, {TextCode@message, 
-      TextCode@italian, TextCode@english, random}],
-    {len, 10, 200, 10}])
-
-
-TableForm@(tab = Table[
-    Map[CoincidenceIndex[Take[#, len]] &, {TextCode@message, 
-      TextCode@Italian, TextCode@English, random}],
-    {len, 10, 200, 10}])
+    Map[CoincidenceIndex[Take[#, len]] &, 
+    {TextCode@message, TextCode@italian, TextCode@english, ciphertext, random}],
+    {len, 10, nfull, 10}]);
 
 Export["advantage.pdf",    ListLinePlot[Transpose@tab, InterpolationOrder -> 2, 
  PlotLegends -> Automatic],"PDF"]
@@ -69,8 +71,8 @@ CoincidenceIndex[testo_, trunc_, n_] :=
 
 TableForm@(tab = Table[
      Map[
-      CoincidenceIndex[#, 15, len] &, {TextCode@message, 
-       TextCode@Italian, TextCode@English, random}],
-     {len, 10, 200, 10}]);
+      CoincidenceIndex[#, 5, len] &, {TextCode@message, 
+       TextCode@italian, TextCode@english, ciphertext, random}],
+     {len, 10, nfull, 10}]);
 Export["advantage-truncated-stat.pdf",ListLinePlot[Transpose@tab, InterpolationOrder -> 2, 
  PlotLegends -> Automatic],"PDF"]
